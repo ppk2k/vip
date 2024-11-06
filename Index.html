@@ -1,40 +1,164 @@
+<?php
+session_start();
+
+// Pengaturan login sederhana (ini hanya contoh, implementasi sesungguhnya harus menggunakan database)
+$valid_users = [
+    'admin' => 'password123'
+];
+
+// Cek apakah pengguna sudah login
+if (isset($_SESSION['user'])) {
+    header("Location: home.php"); // Jika sudah login, arahkan ke halaman utama
+    exit();
+}
+
+// Verifikasi login
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if (isset($valid_users[$username]) && $valid_users[$username] == $password) {
+        $_SESSION['user'] = $username;
+        header("Location: home.php"); // Redirect ke halaman utama
+    } else {
+        $login_error = "Invalid username or password!";
+    }
+}
+
+// Proses pendaftaran
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_username']) && isset($_POST['register_password'])) {
+    $register_username = $_POST['register_username'];
+    $register_password = $_POST['register_password'];
+    $register_email = $_POST['register_email'];
+
+    // Proses penyimpanan data registrasi (misalnya di database, tetapi disini hanya pesan)
+    $register_success = "Registration successful! Please wait for admin approval.";
+}
+
+// Proses kode VIP
+$valid_vip_codes = ["VIP123", "VIP456", "VIP789"];
+$vip_message = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['vip_code'])) {
+    $vip_code = $_POST['vip_code'];
+
+    if (in_array($vip_code, $valid_vip_codes)) {
+        $vip_message = "VIP Code is valid! Access granted.";
+    } else {
+        $vip_message = "Invalid VIP code.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to My Secure Site</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header img.logo {
+            width: 100px;
+            height: auto;
+        }
+
+        h1 {
+            margin-top: 10px;
+        }
+
+        main {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <header>
         <img src="images/logo.png" alt="Logo" class="logo">
-        <h1>Welcome to Our Site</h1>
+        <h1>Welcome to Our Secure Site</h1>
     </header>
 
     <main>
+        <!-- Login Section -->
         <section id="login">
-            <h2>Login to your account</h2>
-            <form action="login/login.php" method="post">
+            <h2>Login to Your Account</h2>
+            <?php if (isset($login_error)) { echo "<p style='color: red;'>$login_error</p>"; } ?>
+            <form action="index.php" method="post">
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit">Login</button>
             </form>
-            <p>New user? <a href="register/register.php">Register here</a></p>
+            <p>New user? <a href="#register-form">Register here</a></p>
         </section>
 
+        <!-- Registration Section -->
+        <section id="register-form">
+            <h2>Register a New Account</h2>
+            <?php if (isset($register_success)) { echo "<p style='color: green;'>$register_success</p>"; } ?>
+            <form action="index.php" method="post">
+                <input type="text" name="register_username" placeholder="Username" required>
+                <input type="password" name="register_password" placeholder="Password" required>
+                <input type="email" name="register_email" placeholder="Email" required>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+
+        <!-- VIP Code Section -->
         <section id="vip-code">
             <h2>Enter VIP Code</h2>
-            <form action="admin/admin.php" method="post">
+            <form action="index.php" method="post">
                 <input type="text" name="vip_code" placeholder="Enter VIP Code" required>
                 <button type="submit">Submit</button>
             </form>
+            <p><?php echo $vip_message; ?></p>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2024 My Secure Site</p>
-        <a href="contact/contact.php">Contact Us</a>
+        <a href="contact.php">Contact Us</a>
     </footer>
 </body>
 </html>
