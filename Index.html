@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Secure Site</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <img src="images/logo.png" alt="Logo" class="logo">
+        <h1>Welcome to Our Site</h1>
+    </header>
+
+    <main>
+        <section id="login">
+            <h2>Login to your account</h2>
+            <form action="login/login.php" method="post">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>New user? <a href="register/register.php">Register here</a></p>
+        </section>
+
+        <section id="vip-code">
+            <h2>Enter VIP Code</h2>
+            <form action="admin/admin.php" method="post">
+                <input type="text" name="vip_code" placeholder="Enter VIP Code" required>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Secure Site</p>
+        <a href="contact/contact.php">Contact Us</a>
+    </footer>
+</body>
+</html>
